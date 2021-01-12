@@ -1,0 +1,90 @@
+<canvas id="canvas" width="400" height="400"></canvas>
+
+
+<script>
+    window.onload = function(){
+        canvas = document.getElementById("canvas");
+        ctx = canvas.getContext('2d');
+
+        document.addEventListener("keydown", function(e){
+            console.log(e.keyCode); //identifica as teclas que estão sendo pressionadas;
+            switch(e.keyCode){ //captura as teclas que foram pressionadas.
+                case 37: //Significa que ele irá para esquerda.
+                    velX = -1;
+                    velY = 0;
+                    break;
+                case 39: //Significa que ele irá para direita.
+                    velX = 1;
+                    velY = 0;
+                    break;
+                case 38: //Significa que ele irá para cima.
+                    velX = 0;
+                    velY = -1;
+                    break;
+                case 40: //Significa que ele irá para baixo.
+                    velX = 0;
+                    velY = 1;
+                    break;
+            }
+        }); //Evento que escuta o teclado
+
+        setInterval(game, 1000/15);
+    }
+
+    snake = [];
+
+    positionX = 10;
+    positionY = 10;
+    grid = 20;
+    velX = 0;
+    velY = 0;
+    tamB = 5; //Tamanha base.
+    foodX = 15;
+    foodY = 15; 
+
+    function game(){
+        positionX += velX;
+        positionY += velY;
+
+        //Serve para delimitar o espaço limite de onde a snake pode andar.
+        if(positionX < 0){
+            positionX = grid; //Esquerda que irá surgir do lado direito.
+        }
+        if(positionX > grid){ //Direita que irá surgir do lado esquerdo.
+            positionX = 0;
+        }
+        if(positionY < 0){ //Para cima que irá surgir de baixo.
+            positionY = grid;
+        }
+        if(positionY > grid){ //Para baixo que irá surgir de cima.
+            positionY = 0;
+        }
+        ctx.fillStyle = "#D3D3D3"; //define a cor de fundo.
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        
+
+        ctx.fillStyle = "black"; //Define a cor da cobra.
+        for(var i = 0; i < snake.length; i++){
+            ctx.fillRect(snake[i].x * grid, snake[i].y * grid, grid -1 , grid -1);
+            if (snake[i].x == positionX && snake[i].y == positionY){
+                tamB = 5;
+            }
+        }
+
+        snake.push({x:positionX, y:positionY});
+
+        while (snake.length > tamB){
+            snake.shift(); //shift fica responsável por retirar cada primeiro valor de dentro de um array. 
+        }
+
+        ctx.fillStyle = "gold"; //Define a cor da food.
+        ctx.fillRect(foodX * grid, foodY * grid, grid -1, grid -1); //surgimento da food no jogo.
+    
+
+    if (positionX == foodX && positionY == foodY){
+        tamB++;
+        foodX = Math.floor(Math.random() * grid);
+    }
+}
+</script>
